@@ -1,9 +1,6 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { Heart } from "lucide-react"
@@ -11,78 +8,32 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
-import { toast } from "@/hooks/use-toast"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import PayPalDonationButton from "./paypal-donation-button"
+import PayPalProvider from "./paypal-provider"
 
-interface DonationFormProps {
+interface DonationFormWithPayPalProps {
   donationType: "one-time" | "supporter" | "innovator" | "pioneer" | "visionary"
   defaultAmount?: number
 }
 
-export default function DonationForm({ donationType, defaultAmount = 50 }: DonationFormProps) {
-  const router = useRouter()
-  const [isSubmitting, setIsSubmitting] = useState(false)
+export default function DonationFormWithPayPal({ donationType, defaultAmount = 50 }: DonationFormWithPayPalProps) {
   const [error, setError] = useState<string | null>(null)
   const [donationAmount, setDonationAmount] = useState(defaultAmount)
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [message, setMessage] = useState("")
   const [isAnonymous, setIsAnonymous] = useState(false)
+  const [paymentMethod, setPaymentMethod] = useState<"stripe" | "paypal">("stripe")
 
   const handleDonationChange = (value: number[]) => {
     setDonationAmount(value[0])
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setError(null)
-
-    try {
-      const response = await fetch("/api/donations", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          amount: donationAmount,
-          name: isAnonymous ? "" : name,
-          email,
-          message,
-          anonymous: isAnonymous,
-          donationType,
-        }),
-      })
-
-      if (!response.ok) {
-        const errorText = await response.text()
-        throw new Error(`API error: ${response.status} - ${errorText}`)
-      }
-
-      const data = await response.json()
-
-      // Redirect to Stripe checkout or thank you page
-      if (data.url) {
-        router.push(data.url)
-      } else {
-        throw new Error("No redirect URL provided")
-      }
-    } catch (error) {
-      console.error("Donation error:", error)
-      setError("Failed to process your donation. Please try again later.")
-      toast({
-        title: "Error",
-        description: "Failed to process your donation. Please try again.",
-        variant: "destructive",
-      })
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form className="space-y-6">
       {error && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
@@ -158,13 +109,36 @@ export default function DonationForm({ donationType, defaultAmount = 50 }: Donat
         </div>
       </div>
 
-      <Button
-        type="submit"
-        className="w-full bg-blue-500 hover:bg-blue-600 py-6 text-lg text-white"
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? "Processing..." : `Donate $${donationAmount}`} <Heart className="ml-2 h-5 w-5" />
-      </Button>
+      <div className="space-y-4">
+        <Label>Payment Method</Label>
+        <Tabs defaultValue="stripe" onValueChange={(value) => setPaymentMethod(value as "stripe" | "paypal")}>
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="stripe">Credit Card</TabsTrigger>
+            <TabsTrigger value="paypal">PayPal</TabsTrigger>
+          </TabsList>
+          <TabsContent value="stripe" className="pt-4">
+            <Button
+              type="submit"
+              className="w-full bg-blue-500 hover:bg-blue-600 py-6 text-lg text-white"
+              formAction="/api/donations"
+            >
+              Donate ${donationAmount} <Heart className="ml-2 h-5 w-5" />
+            </Button>
+          </TabsContent>
+          <TabsContent value="paypal" className="pt-4">
+            <PayPalProvider>
+              <PayPalDonationButton
+                amount={donationAmount}
+                donationType={donationType}
+                name={name || "Anonymous"}
+                email={email}
+                message={message}
+                anonymous={isAnonymous}
+              />
+            </PayPalProvider>
+          </TabsContent>
+        </Tabs>
+      </div>
     </form>
   )
 }
