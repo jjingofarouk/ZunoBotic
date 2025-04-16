@@ -3,8 +3,6 @@ import { Pool } from "pg";
 import { neon } from "@neondatabase/serverless";
 import { DATABASE_URL } from "./env";
 
-// const DATABASE_URL = "postgres://neondb_owner:npg_RDf20qHAMkBc@ep-rapid-lake-a1oiqs63-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require";
-
 // Create a SQL client with Neon
 export const sql = neon(DATABASE_URL || "");
 

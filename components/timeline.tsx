@@ -28,7 +28,7 @@ export default function Timeline() {
       align: "right",
     },
     {
-      year: "2026-2027",
+      year: "2027",
       title: "Regional Outreach to Rwanda and East Africa",
       description: "Extend to neighboring countries, starting with Rwanda.",
       align: "left",

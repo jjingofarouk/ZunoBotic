@@ -18,5 +18,5 @@ export default function PayPalProvider({ children }: PayPalProviderProps) {
     >
       {children}
     </PayPalScriptProvider>
-  );
+  )
 }
