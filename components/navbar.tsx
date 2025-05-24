@@ -1,10 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Menu, X, ArrowRight } from "lucide-react"
+import { Menu, X, ArrowRight } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import Logo from "@/components/logo"
 import { motion, AnimatePresence } from "framer-motion"
+import Link from "next/link" // Add this import
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -50,18 +51,18 @@ export default function Navbar() {
   }
 
   const navItems = [
-    { name: "Home", href: "#", id: "" },
-    { name: "About", href: "#mission", id: "mission" },
-    { name: "Projects", href: "#projects", id: "projects" },
-    { name: "Resources", href: "#tools", id: "tools" },
-    { name: "Support Us", href: "#support", id: "support" },
-    { name: "Services", href: "/services", id: "services" },
+    { name: "Home", href: "#", id: "", isExternal: false },
+    { name: "About", href: "#mission", id: "mission", isExternal: false },
+    { name: "Projects", href: "#projects", id: "projects", isExternal: false },
+    { name: "Services", href: "/services", id: "services", isExternal: true }, // Mark as external
+    { name: "Resources", href: "#tools", id: "tools", isExternal: false },
+    { name: "Support Us", href: "#support", id: "support", isExternal: false },
   ]
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-white shadow-sm py-3" : "bg-white py-5" //changed header colour to white
+        scrolled ? "bg-white shadow-sm py-3" : "bg-white py-5"
       }`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -78,21 +79,35 @@ export default function Navbar() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-10">
             {navItems.map((item) => (
-              <button
-                key={item.name}
-                onClick={() => scrollToSection(item.id)}
-                className={`font-medium transition-colors ${
-                  scrolled
-                    ? activeSection === item.id
-                      ? "text-blue-600"
-                      : "text-gray-700 hover:text-blue-600"
-                    : activeSection === item.id
-                      ? "text-gray-700"
+              item.isExternal ? (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`font-medium transition-colors ${
+                    scrolled
+                      ? "text-gray-700 hover:text-blue-600"
                       : "text-gray-700 hover:text-gray-700"
-                }`}
-              >
-                {item.name}
-              </button>
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              ) : (
+                <button
+                  key={item.name}
+                  onClick={() => scrollToSection(item.id)}
+                  className={`font-medium transition-colors ${
+                    scrolled
+                      ? activeSection === item.id
+                        ? "text-blue-600"
+                        : "text-gray-700 hover:text-blue-600"
+                      : activeSection === item.id
+                        ? "text-gray-700"
+                        : "text-gray-700 hover:text-gray-700"
+                  }`}
+                >
+                  {item.name}
+                </button>
+              )
             ))}
             <Button onClick={() => scrollToSection("support")} className="bg-blue-600 hover:bg-blue-700 text-white">
               Get Involved
@@ -144,15 +159,26 @@ export default function Navbar() {
               <div className="flex-1 overflow-y-auto p-4">
                 <nav className="flex flex-col space-y-6 mt-8">
                   {navItems.map((item) => (
-                    <button
-                      key={item.name}
-                      onClick={() => scrollToSection(item.id)}
-                      className={`py-3 text-gray-700 hover:text-blue-600 font-medium text-xl ${
-                        item.name === "Support Us" ? "bg-blue-50 px-4 py-4 rounded-md" : ""
-                      }`}
-                    >
-                      {item.name}
-                    </button>
+                    item.isExternal ? (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        onClick={() => setIsOpen(false)}
+                        className="py-3 text-gray-700 hover:text-blue-600 font-medium text-xl"
+                      >
+                        {item.name}
+                      </Link>
+                    ) : (
+                      <button
+                        key={item.name}
+                        onClick={() => scrollToSection(item.id)}
+                        className={`py-3 text-gray-700 hover:text-blue-600 font-medium text-xl ${
+                          item.name === "Support Us" ? "bg-blue-50 px-4 py-4 rounded-md" : ""
+                        }`}
+                      >
+                        {item.name}
+                      </button>
+                    )
                   ))}
                 </nav>
               </div>
