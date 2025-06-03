@@ -54,7 +54,7 @@ export default function Navbar() {
     { name: "Home", href: "#", id: "", isExternal: false },
     { name: "About", href: "#mission", id: "mission", isExternal: false },
     { name: "Projects", href: "#projects", id: "projects", isExternal: false },
-    { name: "Services", href: "/services", id: "services", isExternal: true }, // Mark as external
+    { name: "Services", href: "services.zunobotics.com", id: "services", isExternal: true }, // Mark as external
     { name: "Resources", href: "#tools", id: "tools", isExternal: false },
     { name: "Support Us", href: "#support", id: "support", isExternal: false },
   ]
