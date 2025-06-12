@@ -15,10 +15,9 @@ function RobotArmVideo() {
         loop
         muted
         playsInline
-        className="w-full h-full object-cover opacity-50" // Reduced opacity for better contrast
+        className="w-full h-full object-cover"
       />
-      {/* Dark overlay for improved text contrast */}
-      <div className="absolute inset-0 bg-background/70 z-10"></div>
+      {/* Removed dark overlay and opacity adjustment */}
     </motion.div>
   );
 }
@@ -46,11 +45,11 @@ export default function Hero() {
           >
             <h1
               id="hero-heading"
-              className="text-5xl md:text-7xl font-bold text-foreground mb-6 drop-shadow-sm text_new-balance"
+              className="text-5xl md:text-7xl font-bold text-foreground mb-6 drop-shadow-lg"
             >
               Invent Without Limits
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto drop-shadow-sm text_new-balance">
+            <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto drop-shadow-lg">
               Democratizing robotics and automation innovation in Africa through open-source technology.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
