@@ -1,41 +1,11 @@
-// components/theme-toggle.tsx
-"use client"
+'use client'
 
-import { useState, useEffect } from "react"
-import { Sun, Moon } from "lucide-react"
-import { useTheme } from "next-themes"
-import { Button } from "@/components/ui/button"
+import * as React from 'react'
+import {
+  ThemeProvider as NextThemesProvider,
+  type ThemeProviderProps,
+} from 'next-themes'
 
-export default function ThemeToggle() {
-  const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-
-  // Ensure component is mounted to avoid hydration mismatch
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) {
-    return null // Prevent rendering until mounted
-  }
-
-  const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light")
-  }
-
-  return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={toggleTheme}
-      aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
-      className="btn-elegant"
-    >
-      {theme === "light" ? (
-        <Moon className="h-5 w-5 text-foreground" />
-      ) : (
-        <Sun className="h-5 w-5 text-foreground" />
-      )}
-    </Button>
-  )
+export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
+  return <NextThemesProvider {...props}>{children}</NextThemesProvider>
 }

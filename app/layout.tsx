@@ -11,7 +11,9 @@ export const metadata = {
   description: 'Empowering African innovation through robotics and automation.',
 }
 
-export default function RootLayout({ children }) {
+import { ReactNode } from 'react';
+
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${poppins.variable}`} suppressHydrationWarning>
       <body>
