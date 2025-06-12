@@ -6,15 +6,13 @@ import { Users, Briefcase, Award } from 'lucide-react';
 import { Badge } from "@/components/ui/badge"; 
 
 export default function Mission() {
-  const [isPaused, setIsPaused] = useState({
-    team: false,
-    milestones: false,
-  });
   const [visibleSections, setVisibleSections] = useState({
     mission: false,
     team: false,
-    milestones: false,
+    milestones: false
   });
+  const [teamIndex, setTeamIndex] = useState(0);
+  const [milestoneIndex, setMilestoneIndex] = useState(0);
   
   const missionRef = useRef<HTMLElement>(null);
   const teamRef = useRef<HTMLElement>(null);
@@ -62,9 +60,6 @@ export default function Mission() {
     },
   ];
 
-  const duplicatedTeamMembers = [...teamMembers, ...teamMembers];
-  const duplicatedMilestones = [...milestones, ...milestones];
-
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -99,6 +94,24 @@ export default function Mission() {
       });
     };
   }, []);
+
+  useEffect(() => {
+    if (visibleSections.team) {
+      const interval = setInterval(() => {
+        setTeamIndex((prev) => (prev + 1) % teamMembers.length);
+      }, 3000);
+      return () => clearInterval(interval);
+    }
+  }, [visibleSections.team, teamMembers.length]);
+
+  useEffect(() => {
+    if (visibleSections.milestones) {
+      const interval = setInterval(() => {
+        setMilestoneIndex((prev) => (prev + 1) % milestones.length);
+      }, 3000);
+      return () => clearInterval(interval);
+    }
+  }, [visibleSections.milestones, milestones.length]);
 
   return (
     <div className="flex flex-col overflow-hidden">
@@ -161,52 +174,49 @@ export default function Mission() {
             </p>
           </div>
 
-          <div className="relative">
-            <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-background via-background/80 to-transparent z-10 pointer-events-none"></div>
-            <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-background via-background/80 to-transparent z-10 pointer-events-none"></div>
-            
-            <div 
-              className="flex gap-8 md:gap-12"
-              style={{
-                animation: isPaused.team ? 'none' : 'marquee 20s linear infinite',
-              }}
-              onMouseEnter={() => setIsPaused(prev => ({ ...prev, team: true }))}
-              onMouseLeave={() => setIsPaused(prev => ({ ...prev, team: false }))}
-            >
-              {duplicatedTeamMembers.map((member, index) => (
-                <div
-                  key={`${member.name}-${index}`}
-                  className={`bg-card p-6 rounded-lg shadow-md border border-border hover:shadow-lg transition-all duration-1000 transform flex-shrink-0 max-w-sm ${
-                    visibleSections.team ? 'opacity-100' : 'opacity-0'
+          <div className="relative max-w-4xl mx-auto">
+            <div className="overflow-hidden">
+              <div
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${teamIndex * 100}%)` }}
+              >
+                {teamMembers.map((member, index) => (
+                  <div
+                    key={index}
+                    className="flex-shrink-0 w-full max-w-sm mx-auto"
+                  >
+                    <div
+                      className={`bg-card p-6 rounded-lg shadow-md border border-border hover:shadow-lg transition-all duration-1000 transform ${
+                        visibleSections.team ? 'opacity-100' : 'opacity-0'
+                      }`}
+                      style={{ transitionDelay: `${index * 200}ms` }}
+                    >
+                      <img
+                        src={member.image}
+                        alt={member.name}
+                        className="w-24 h-24 rounded-full mx-auto mb-4 object-cover"
+                      />
+                      <h3 className="text-xl font-bold text-foreground mb-2 text-center">{member.name}</h3>
+                      <p className="text-primary font-medium mb-2 text-center">{member.role}</p>
+                      <p className="text-muted-foreground text-center">{member.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-center gap-2 mt-6">
+              {teamMembers.map((_, index) => (
+                <button
+                  key={index}
+                  className={`w-3 h-3 rounded-full ${
+                    teamIndex === index ? 'bg-primary' : 'bg-muted'
                   }`}
-                  style={{
-                    minWidth: '280px',
-                    transitionDelay: `${index * 200}ms`
-                  }}
-                >
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-24 h-24 rounded-full mx-auto mb-4 object-cover"
-                  />
-                  <h3 className="text-xl font-bold text-foreground mb-2 text-center">{member.name}</h3>
-                  <p className="text-primary font-medium mb-2 text-center">{member.role}</p>
-                  <p className="text-muted-foreground text-center">{member.description}</p>
-                </div>
+                  onClick={() => setTeamIndex(index)}
+                />
               ))}
             </div>
           </div>
         </div>
-        <style jsx>{`
-          @keyframes marquee {
-            0% {
-              transform: translateX(0);
-            }
-            100% {
-              transform: translateX(-50%);
-            }
-          }
-        `}</style>
       </section>
 
       <section id="milestones" ref={milestonesRef} className="py-24 bg-background overflow-hidden">
@@ -220,50 +230,47 @@ export default function Mission() {
             </p>
           </div>
 
-          <div className="relative">
-            <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-background via-background/80 to-transparent z-10 pointer-events-none"></div>
-            <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-background via-background/80 to-transparent z-10 pointer-events-none"></div>
-            
-            <div 
-              className="flex gap-8 md:gap-12"
-              style={{
-                animation: isPaused.milestones ? 'none' : 'marquee 15s linear infinite',
-              }}
-              onMouseEnter={() => setIsPaused(prev => ({ ...prev, milestones: true }))}
-              onMouseLeave={() => setIsPaused(prev => ({ ...prev, milestones: false }))}
-            >
-              {duplicatedMilestones.map((milestone, index) => (
-                <div
-                  key={`${milestone.title}-${index}`}
-                  className={`bg-card p-6 rounded-lg hover:shadow-lg transition-all duration-1000 transform flex-shrink-0 ${
-                    visibleSections.milestones ? 'opacity-100' : 'opacity-0'
-                  }`}
-                  style={{
-                    minWidth: '280px',
-                    transitionDelay: `${index * 200}ms`
-                  }}
-                >
-                  <div className="flex items-center mb-4">
-                    {milestone.icon}
-                    <h3 className="text-xl font-bold text-foreground ml-3">{milestone.year}</h3>
+          <div className="relative max-w-4xl mx-auto">
+            <div className="overflow-hidden">
+              <div
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${milestoneIndex * 100}%)` }}
+              >
+                {milestones.map((milestone, index) => (
+                  <div
+                    key={index}
+                    className="flex-shrink-0 w-full max-w-sm mx-auto"
+                  >
+                    <div
+                      className={`bg-card p-6 rounded-lg hover:shadow-lg transition-all duration-1000 transform ${
+                        visibleSections.milestones ? 'opacity-100' : 'opacity-0'
+                      }`}
+                      style={{ transitionDelay: `${index * 200}ms` }}
+                    >
+                      <div className="flex items-center mb-4">
+                        {milestone.icon}
+                        <h3 className="text-xl font-bold text-foreground ml-3">{milestone.year}</h3>
+                      </div>
+                      <h4 className="text-lg font-semibold text-primary mb-2">{milestone.title}</h4>
+                      <p className="text-muted-foreground">{milestone.description}</p>
+                    </div>
                   </div>
-                  <h4 className="text-lg font-semibold text-primary mb-2">{milestone.title}</h4>
-                  <p className="text-muted-foreground">{milestone.description}</p>
-                </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-center gap-2 mt-6">
+              {milestones.map((_, index) => (
+                <button
+                  key={index}
+                  className={`w-3 h-3 rounded-full ${
+                    milestoneIndex === index ? 'bg-primary' : 'bg-muted'
+                  }`}
+                  onClick={() => setMilestoneIndex(index)}
+                />
               ))}
             </div>
           </div>
         </div>
-        <style jsx>{`
-          @keyframes marquee {
-            0% {
-              transform: translateX(0);
-            }
-            100% {
-              transform: translateX(-50%);
-            }
-          }
-        `}</style>
       </section>
     </div>
   );
