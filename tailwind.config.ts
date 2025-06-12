@@ -1,6 +1,6 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
 
-const config = {
+const config: Config = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -19,6 +19,9 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        manrope: ['Manrope', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -54,17 +57,17 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
         blue: {
-          50: "#eff6ff",
-          100: "#dbeafe",
-          200: "#bfdbfe",
-          300: "#93c5fd",
-          400: "#60a5fa",
-          500: "#3b82f6",
-          600: "#2563eb",
-          700: "#1d4ed8",
-          800: "#1e40af",
-          900: "#1e3a8a",
-          950: "#172554",
+          50: "#f0f7ff",
+          100: "#e0edff",
+          200: "#c3dbff",
+          300: "#9cc4ff",
+          400: "#7aaeff",
+          500: "#5294ff",
+          600: "#3b77e6",
+          700: "#2b5bb8",
+          800: "#224593",
+          900: "#1c3773",
+          950: "#152a56",
         },
       },
       borderRadius: {
@@ -89,6 +92,6 @@ const config = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-} satisfies Config
+};
 
-export default config
+export default config;
