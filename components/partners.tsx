@@ -4,7 +4,7 @@
 import { useEffect, useRef, useState } from "react";
 
 export default function Partners() {
-  const [isPaused, setIsPaused] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -41,8 +41,6 @@ export default function Partners() {
     },
   ];
 
-  const duplicatedPartners = [...partners, ...partners];
-
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -67,6 +65,15 @@ export default function Partners() {
     };
   }, []);
 
+  useEffect(() => {
+    if (isVisible) {
+      const interval = setInterval(() => {
+        setCurrentIndex((prev) => (prev + 1) % partners.length);
+      }, 3000);
+      return () => clearInterval(interval);
+    }
+  }, [isVisible, partners.length]);
+
   return (
     <section ref={sectionRef} className="py-24 bg-background overflow-hidden">
       <div className="container">
@@ -79,38 +86,47 @@ export default function Partners() {
           </p>
         </div>
 
-        <div className="relative">
-          <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-background via-background/80 to-transparent z-10 pointer-events-none"></div>
-          <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-background via-background/80 to-transparent z-10 pointer-events-none"></div>
-          
-          <div 
-            className="flex gap-8 md:gap-12"
-            style={{
-              animation: isPaused ? 'none' : 'marquee 30s linear infinite',
-            }}
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-          >
-            {duplicatedPartners.map((partner, index) => (
-              <div
-                key={`${partner.name}-${index}`}
-                className="flex-shrink-0 bg-card hover:bg-card/80 rounded-lg p-6 shadow-md border border-border hover:shadow-lg transition-all duration-300 cursor-pointer group"
-                style={{ minWidth: '280px' }}
-              >
-                <div className="flex flex-col items-center text-center">
-                  <div className="mb-4 p-4 bg-background rounded-lg shadow-sm group-hover:shadow-md transition-shadow duration-300">
-                    <img
-                      src={partner.logo || "/images/partners/techbit.jpeg"}
-                      alt={partner.name}
-                      className="max-h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-110"
-                    />
+        <div className="relative max-w-4xl mx-auto">
+          <div className="overflow-hidden">
+            <div
+              className="flex transition-transform duration-500 ease-in-out"
+              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+            >
+              {partners.map((partner, index) => (
+                <div
+                  key={index}
+                  className="flex-shrink-0 w-full max-w-sm mx-auto"
+                >
+                  <div
+                    className="flex-shrink-0 bg-card hover:bg-card/80 rounded-lg p-6 shadow-md border border-border hover:shadow-lg transition-all duration-300 cursor-pointer group"
+                  >
+                    <div className="flex flex-col items-center text-center">
+                      <div className="mb-4 p-4 bg-background rounded-lg shadow-sm group-hover:shadow-md transition-shadow duration-300">
+                        <img
+                          src={partner.logo || "/images/partners/techbit.jpeg"}
+                          alt={partner.name}
+                          className="max-h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-110"
+                        />
+                      </div>
+                      <h3 className="text-lg font-semibold text-foreground mb-2">{partner.name}</h3>
+                      <span className="inline-block px-3 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full">
+                        {partner.category}
+                      </span>
+                    </div>
                   </div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">{partner.name}</h3>
-                  <span className="inline-block px-3 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full">
-                    {partner.category}
-                  </span>
                 </div>
-              </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex justify-center gap-2 mt-6">
+            {partners.map((_, index) => (
+              <button
+                key={index}
+                className={`w-3 h-3 rounded-full ${
+                  currentIndex === index ? 'bg-primary' : 'bg-muted'
+                }`}
+                onClick={() => setCurrentIndex(index)}
+              />
             ))}
           </div>
         </div>
@@ -132,17 +148,6 @@ export default function Partners() {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes marquee {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-      `}</style>
     </section>
   );
 }
