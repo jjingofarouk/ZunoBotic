@@ -1,7 +1,7 @@
 // components/partners.tsx
-"use client"
+"use client";
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react";
 
 export default function Partners() {
   const [isPaused, setIsPaused] = useState(false);
@@ -13,41 +13,34 @@ export default function Partners() {
       name: "Makerere University",
       logo: "/images/partners/makerere.jpeg",
       category: "Academic",
-      description: "Leading research institution in Uganda promoting robotics innovation.",
     },
     {
       name: "Kyambogo University",
       logo: "/images/partners/kyambogo.jpeg",
       category: "Academic",
-      description: "Partner in engineering education and student-led projects.",
     },
     {
       name: "Uganda Martyrs University",
       logo: "/images/partners/uganda-martyrs.jpeg",
       category: "Academic",
-      description: "Supports sustainable technology solutions for communities.",
     },
     {
       name: "Mbarara University",
       logo: "/images/partners/mbarara.jpeg",
       category: "Academic",
-      description: "Drives innovation in healthcare and accessibility tech.",
     },
     {
       name: "TechBit",
       logo: "/images/partners/techbit.jpeg",
       category: "Industry",
-      description: "Provides hardware components and technical expertise.",
     },
     {
       name: "Innovation Hub Uganda",
       logo: "/images/partners/innovation-hub.jpg",
       category: "Community",
-      description: "Connects innovators and supports startup ecosystems.",
     },
-  ]
+  ];
 
-  // Duplicate partners for seamless loop
   const duplicatedPartners = [...partners, ...partners];
 
   useEffect(() => {
@@ -86,11 +79,7 @@ export default function Partners() {
           </p>
         </div>
 
-        {/* Modern Marquee */}
-        <div className={`relative transition-all duration-1000 delay-500 ${
-          isVisible ? 'opacity-100' : 'opacity-0'
-        }`}>
-          {/* Gradient overlays for smooth fade effect */}
+        <div className="relative">
           <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-background via-background/80 to-transparent z-10 pointer-events-none"></div>
           <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-background via-background/80 to-transparent z-10 pointer-events-none"></div>
           
@@ -117,19 +106,15 @@ export default function Partners() {
                     />
                   </div>
                   <h3 className="text-lg font-semibold text-foreground mb-2">{partner.name}</h3>
-                  <span className="inline-block px-3 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full mb-3">
+                  <span className="inline-block px-3 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full">
                     {partner.category}
                   </span>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    {partner.description}
-                  </p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Partner Categories */}
         <div className={`mt-16 flex flex-wrap justify-center gap-4 transition-all duration-1000 delay-700 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}>
@@ -159,5 +144,5 @@ export default function Partners() {
         }
       `}</style>
     </section>
-  )
+  );
 }
