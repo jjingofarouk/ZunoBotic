@@ -13,31 +13,37 @@ export default function Partners() {
       name: "Makerere University",
       logo: "/images/partners/makerere.jpeg",
       category: "Academic",
+      description: "Leading research institution in Uganda promoting robotics innovation.",
     },
     {
       name: "Kyambogo University",
       logo: "/images/partners/kyambogo.jpeg",
       category: "Academic",
+      description: "Partner in engineering education and student-led projects.",
     },
     {
       name: "Uganda Martyrs University",
       logo: "/images/partners/uganda-martyrs.jpeg",
       category: "Academic",
+      description: "Supports sustainable technology solutions for communities.",
     },
     {
       name: "Mbarara University",
       logo: "/images/partners/mbarara.jpeg",
       category: "Academic",
+      description: "Drives innovation in healthcare and accessibility tech.",
     },
     {
       name: "TechBit",
       logo: "/images/partners/techbit.jpeg",
       category: "Industry",
+      description: "Provides hardware components and technical expertise.",
     },
     {
       name: "Innovation Hub Uganda",
       logo: "/images/partners/innovation-hub.jpg",
       category: "Community",
+      description: "Connects innovators and supports startup ecosystems.",
     },
   ];
 
@@ -109,9 +115,12 @@ export default function Partners() {
                         />
                       </div>
                       <h3 className="text-lg font-semibold text-foreground mb-2">{partner.name}</h3>
-                      <span className="inline-block px-3 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full">
+                      <span className="inline-block px-3 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full mb-3">
                         {partner.category}
                       </span>
+                      <p className="text-muted-foreground text-sm leading-relaxed">
+                        {partner.description}
+                      </p>
                     </div>
                   </div>
                 </div>
