@@ -1,9 +1,9 @@
-// components/mission.tsx
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Users, Briefcase, Award } from 'lucide-react';
-import { Badge } from "@/components/ui/badge"; 
+import { Badge } from "@/components/ui/badge";
+import { motion, useInView } from 'framer-motion'; // Add framer-motion for animations
 
 export default function Mission() {
   const [visibleSections, setVisibleSections] = useState({
@@ -12,8 +12,7 @@ export default function Mission() {
     milestones: false
   });
   const [teamIndex, setTeamIndex] = useState(0);
-  const [milestoneIndex, setMilestoneIndex] = useState(0);
-  
+
   const missionRef = useRef<HTMLElement>(null);
   const teamRef = useRef<HTMLElement>(null);
   const milestonesRef = useRef<HTMLElement>(null);
@@ -103,15 +102,6 @@ export default function Mission() {
       return () => clearInterval(interval);
     }
   }, [visibleSections.team, teamMembers.length]);
-
-  useEffect(() => {
-    if (visibleSections.milestones) {
-      const interval = setInterval(() => {
-        setMilestoneIndex((prev) => (prev + 1) % milestones.length);
-      }, 3000);
-      return () => clearInterval(interval);
-    }
-  }, [visibleSections.milestones, milestones.length]);
 
   return (
     <div className="flex flex-col overflow-hidden">
@@ -219,7 +209,7 @@ export default function Mission() {
         </div>
       </section>
 
-      <section id="milestones" ref={milestonesRef} className="py-24 bg-background overflow-hidden">
+      <section id="milestones" ref={milestonesRef} className="py-24 bg-background">
         <div className="container">
           <div className={`text-center mb-16 transition-all duration-1000 ${
             visibleSections.milestones ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
@@ -231,44 +221,38 @@ export default function Mission() {
           </div>
 
           <div className="relative max-w-4xl mx-auto">
-            <div className="overflow-hidden">
-              <div
-                className="flex transition-transform duration-500 ease-in-out"
-                style={{ transform: `translateX(-${milestoneIndex * 100}%)` }}
+            {/* Central timeline line */}
+            <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-primary h-full"></div>
+
+            {milestones.map((milestone, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 50 }}
+                animate={visibleSections.milestones ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: index * 0.2 }}
+                className={`relative flex mb-12 ${
+                  index % 2 === 0 ? 'justify-start' : 'justify-end'
+                } w-full`}
               >
-                {milestones.map((milestone, index) => (
-                  <div
-                    key={index}
-                    className="flex-shrink-0 w-full max-w-sm mx-auto"
-                  >
-                    <div
-                      className={`bg-card p-6 rounded-lg hover:shadow-lg transition-all duration-1000 transform ${
-                        visibleSections.milestones ? 'opacity-100' : 'opacity-0'
-                      }`}
-                      style={{ transitionDelay: `${index * 200}ms` }}
-                    >
-                      <div className="flex items-center mb-4">
-                        {milestone.icon}
-                        <h3 className="text-xl font-bold text-foreground ml-3">{milestone.year}</h3>
-                      </div>
-                      <h4 className="text-lg font-semibold text-primary mb-2">{milestone.title}</h4>
-                      <p className="text-muted-foreground">{milestone.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="flex justify-center gap-2 mt-6">
-              {milestones.map((_, index) => (
-                <button
-                  key={index}
-                  className={`w-3 h-3 rounded-full ${
-                    milestoneIndex === index ? 'bg-primary' : 'bg-muted'
+                <div
+                  className={`bg-card p-6 rounded-lg shadow-md border border-border hover:shadow-lg w-full md:w-5/12 ${
+                    index % 2 === 0 ? 'mr-auto' : 'ml-auto'
                   }`}
-                  onClick={() => setMilestoneIndex(index)}
+                >
+                  <div className="flex items-center mb-4">
+                    {milestone.icon}
+                    <h3 className="text-xl font-bold text-foreground ml-3">{milestone.year}</h3>
+                  </div>
+                  <h4 className="text-lg font-semibold text-primary mb-2">{milestone.title}</h4>
+                  <p className="text-muted-foreground">{milestone.description}</p>
+                </div>
+                {/* Timeline dot */}
+                <div
+                  className="absolute top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-primary border-2 border-background"
+                  style={{ left: '50%' }}
                 />
-              ))}
-            </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
