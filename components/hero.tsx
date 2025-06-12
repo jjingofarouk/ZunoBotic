@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
@@ -9,16 +10,15 @@ function RobotArmVideo() {
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
-      <video
-        src="/Robot_Arm_Animation.mp4"
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="w-full h-full object-cover opacity-50" // Reduced opacity for better contrast
+      <iframe
+        src="https://player.cloudinary.com/embed/?cloud_name=dff6omjr9&public_id=lc3wt5c6fuarpczg6i3a&player[autoplay]=true&player[muted]=true&player[loop]=true&player[controls]=false"
+        allow="autoplay; fullscreen; encrypted-media"
+        allowFullScreen
+        frameBorder="0"
+        className="w-full h-full object-cover"
       />
       {/* Dark overlay for improved text contrast */}
-      <div className="absolute inset-0 bg-background/70 z-10"></div>
+      <div className="absolute inset-0 bg-background/70 z-10" />
     </motion.div>
   );
 }
