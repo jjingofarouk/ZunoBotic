@@ -1,4 +1,4 @@
-Will that work well here import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
 function RobotArmVideo() {
